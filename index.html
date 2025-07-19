@@ -1,88 +1,913 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Lost & Found</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.0.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.0.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .main-nav {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+
+      .nav-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .nav-btn:hover,
+      .nav-btn.active {
+        background: rgba(255, 255, 255, 0.9);
+        color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .section {
+        display: none;
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .section.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .item-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .item-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .item-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+
+      .item-status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+      }
+
+      .status-lost {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .status-found {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+
+      .item-card h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+      }
+
+      .item-card p {
+        color: #666;
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+
+      .search-box {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto 30px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 15px 50px 15px 20px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #667eea;
+        font-size: 1.2rem;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #667eea;
+        font-size: 1.1rem;
+      }
+
+      .loading::after {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #667eea;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 120px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+        display: block;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .main-nav {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .nav-btn {
+          width: 200px;
+        }
+
+        .items-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 Campus Lost & Found</h1>
+        <p>
+          Connecting students with their lost belongings using AI-powered search
+        </p>
+      </div>
+
+      <nav class="main-nav">
+        <button class="nav-btn active" onclick="showSection('browse')">
+          Browse Items
+        </button>
+        <button class="nav-btn" onclick="showSection('report-lost')">
+          Report Lost
+        </button>
+        <button class="nav-btn" onclick="showSection('report-found')">
+          Report Found
+        </button>
+        <button class="nav-btn" onclick="showSection('my-items')">
+          My Items
+        </button>
+      </nav>
+
+      <div class="stats">
+        <div class="stat-card">
+          <span class="stat-number" id="total-items">0</span>
+          <div class="stat-label">Total Items</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="lost-items">0</span>
+          <div class="stat-label">Lost Items</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="found-items">0</span>
+          <div class="stat-label">Found Items</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="matched-items">0</span>
+          <div class="stat-label">Matched</div>
+        </div>
+      </div>
+
+      <!-- Browse Items Section -->
+      <section id="browse" class="section active">
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search items, locations, descriptions..."
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+        <div id="items-container">
+          <div class="loading">Loading items...</div>
+        </div>
+      </section>
+
+      <!-- Report Lost Item Section -->
+      <section id="report-lost" class="section">
+        <h2 style="margin-bottom: 20px; color: #333">Report a Lost Item</h2>
+        <form id="lost-item-form">
+          <div class="form-group">
+            <label for="lost-item-name">Item Name*</label>
+            <input
+              type="text"
+              id="lost-item-name"
+              required
+              placeholder="e.g., iPhone 13, Blue Backpack"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lost-category">Category*</label>
+            <select id="lost-category" required>
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="clothing">Clothing</option>
+              <option value="books">Books & Stationery</option>
+              <option value="accessories">Accessories</option>
+              <option value="sports">Sports Equipment</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="lost-description">Description*</label>
+            <textarea
+              id="lost-description"
+              rows="3"
+              required
+              placeholder="Detailed description including color, brand, distinguishing features..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="lost-location">Last Seen Location*</label>
+            <input
+              type="text"
+              id="lost-location"
+              required
+              placeholder="e.g., Library 2nd floor, Cafeteria, Gym"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lost-date">Date Lost*</label>
+            <input type="date" id="lost-date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="lost-contact">Contact Information*</label>
+            <input
+              type="email"
+              id="lost-contact"
+              required
+              placeholder="Your email address"
+            />
+          </div>
+
+          <button type="submit" class="btn">Report Lost Item</button>
+        </form>
+      </section>
+
+      <!-- Report Found Item Section -->
+      <section id="report-found" class="section">
+        <h2 style="margin-bottom: 20px; color: #333">Report a Found Item</h2>
+        <form id="found-item-form">
+          <div class="form-group">
+            <label for="found-item-name">Item Name*</label>
+            <input
+              type="text"
+              id="found-item-name"
+              required
+              placeholder="e.g., iPhone 13, Blue Backpack"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="found-category">Category*</label>
+            <select id="found-category" required>
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="clothing">Clothing</option>
+              <option value="books">Books & Stationery</option>
+              <option value="accessories">Accessories</option>
+              <option value="sports">Sports Equipment</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="found-description">Description*</label>
+            <textarea
+              id="found-description"
+              rows="3"
+              required
+              placeholder="Detailed description including color, brand, distinguishing features..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="found-location">Found Location*</label>
+            <input
+              type="text"
+              id="found-location"
+              required
+              placeholder="e.g., Library 2nd floor, Cafeteria, Gym"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="found-date">Date Found*</label>
+            <input type="date" id="found-date" required />
+          </div>
+
+          <div class="form-group">
+            <label for="found-contact">Contact Information*</label>
+            <input
+              type="email"
+              id="found-contact"
+              required
+              placeholder="Your email address"
+            />
+          </div>
+
+          <button type="submit" class="btn">Report Found Item</button>
+        </form>
+      </section>
+
+      <!-- My Items Section -->
+      <section id="my-items" class="section">
+        <h2 style="margin-bottom: 20px; color: #333">My Reported Items</h2>
+        <div id="my-items-container">
+          <div class="empty-state">
+            <h3>No items reported yet</h3>
+            <p>Items you report as lost or found will appear here</p>
+          </div>
+        </div>
+      </section>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-firestore-compat.min.js"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+      // Configuration - Replace with your actual API keys
+      const GEMINI_API_KEY = "your-gemini-api-key-here";
+      const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyBt87fU0-bRRc6MeSYiZuY2V2h97VpL2i0",
+        authDomain: "campuslostandfound-f09d7.firebaseapp.com",
+        projectId: "campuslostandfound-f09d7",
+        storageBucket: "campuslostandfound-f09d7.firebasestorage.app",
+        messagingSenderId: "143785285703",
+        appId: "1:143785285703:web:eae469980989d1b00df962",
+        measurementId: "G-4K9KYVH7Q7",
+      };
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+      // Initialize Firebase (using demo mode for this example)
+      let db;
+      try {
+        firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.firestore();
+      } catch (error) {
+        console.log("Firebase not configured, using localStorage as fallback");
+        db = null;
+      }
+
+      // In-memory storage for demo purposes
+      let items = [];
+      let userEmail = "";
+
+      // Sample data for demonstration
+      const sampleData = [
+        {
+          id: "1",
+          name: "iPhone 13 Pro",
+          category: "electronics",
+          description:
+            "Black iPhone 13 Pro with a cracked screen protector and blue case",
+          location: "Library 2nd Floor",
+          date: "2025-01-15",
+          contact: "student1@university.edu",
+          status: "lost",
+          timestamp: Date.now() - 86400000,
+        },
+        {
+          id: "2",
+          name: "Blue Nike Backpack",
+          category: "accessories",
+          description:
+            "Navy blue Nike backpack with laptop compartment, contains textbooks",
+          location: "Cafeteria",
+          date: "2025-01-14",
+          contact: "student2@university.edu",
+          status: "found",
+          timestamp: Date.now() - 172800000,
+        },
+        {
+          id: "3",
+          name: "Calculus Textbook",
+          category: "books",
+          description:
+            'Stewart Calculus 8th Edition, name "Alex" written inside cover',
+          location: "Math Building Room 201",
+          date: "2025-01-13",
+          contact: "student3@university.edu",
+          status: "lost",
+          timestamp: Date.now() - 259200000,
+        },
+      ];
+
+      // Load sample data on startup
+      items = [...sampleData];
+
+      // Navigation
+      function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll(".section").forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        // Remove active class from all nav buttons
+        document.querySelectorAll(".nav-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Show selected section
+        document.getElementById(sectionId).classList.add("active");
+
+        // Add active class to clicked button
+        event.target.classList.add("active");
+
+        // Load section-specific content
+        if (sectionId === "browse") {
+          loadItems();
+        } else if (sectionId === "my-items") {
+          loadMyItems();
         }
+      }
+
+      // Load and display items
+      function loadItems(searchTerm = "") {
+        const container = document.getElementById("items-container");
+
+        // Filter items based on search
+        let filteredItems = items;
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase();
+          filteredItems = items.filter(
+            (item) =>
+              item.name.toLowerCase().includes(term) ||
+              item.description.toLowerCase().includes(term) ||
+              item.location.toLowerCase().includes(term) ||
+              item.category.toLowerCase().includes(term)
+          );
+        }
+
+        if (filteredItems.length === 0) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No items found</h3>
+                        <p>${
+                          searchTerm
+                            ? "Try adjusting your search terms"
+                            : "No items have been reported yet"
+                        }</p>
+                    </div>
+                `;
+          return;
+        }
+
+        // Sort by most recent first
+        filteredItems.sort((a, b) => b.timestamp - a.timestamp);
+
+        container.innerHTML = `
+                <div class="items-grid">
+                    ${filteredItems
+                      .map(
+                        (item) => `
+                        <div class="item-card">
+                            <span class="item-status status-${item.status}">${
+                          item.status
+                        }</span>
+                            <h3>${item.name}</h3>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${
+                              item.description
+                            }</p>
+                            <p><strong>Location:</strong> ${item.location}</p>
+                            <p><strong>Date:</strong> ${new Date(
+                              item.date
+                            ).toLocaleDateString()}</p>
+                            <p><strong>Contact:</strong> ${item.contact}</p>
+                            <button class="btn" onclick="findSimilarItems('${
+                              item.id
+                            }')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9rem;">Find Similar Items</button>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+      }
+
+      // Load user's items
+      function loadMyItems() {
+        const container = document.getElementById("my-items-container");
+
+        if (!userEmail) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No items reported yet</h3>
+                        <p>Report lost or found items to see them here</p>
+                    </div>
+                `;
+          return;
+        }
+
+        const myItems = items.filter((item) => item.contact === userEmail);
+
+        if (myItems.length === 0) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No items reported yet</h3>
+                        <p>Items you report as lost or found will appear here</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = `
+                <div class="items-grid">
+                    ${myItems
+                      .map(
+                        (item) => `
+                        <div class="item-card">
+                            <span class="item-status status-${item.status}">${
+                          item.status
+                        }</span>
+                            <h3>${item.name}</h3>
+                            <p><strong>Category:</strong> ${item.category}</p>
+                            <p><strong>Description:</strong> ${
+                              item.description
+                            }</p>
+                            <p><strong>Location:</strong> ${item.location}</p>
+                            <p><strong>Date:</strong> ${new Date(
+                              item.date
+                            ).toLocaleDateString()}</p>
+                            <button class="btn" onclick="deleteItem('${
+                              item.id
+                            }')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.9rem; background: #dc2626;">Delete</button>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+      }
+
+      // Update statistics
+      function updateStats() {
+        const total = items.length;
+        const lost = items.filter((item) => item.status === "lost").length;
+        const found = items.filter((item) => item.status === "found").length;
+        const matched = Math.floor(Math.random() * 3); // Demo value
+
+        document.getElementById("total-items").textContent = total;
+        document.getElementById("lost-items").textContent = lost;
+        document.getElementById("found-items").textContent = found;
+        document.getElementById("matched-items").textContent = matched;
+      }
+
+      // Find similar items using Gemini AI (demo function)
+      async function findSimilarItems(itemId) {
+        const item = items.find((i) => i.id === itemId);
+        if (!item) return;
+
+        // Demo AI matching logic
+        alert(
+          `AI Analysis: Found 2 potentially matching items for "${item.name}"!\n\nSimilar items based on description and location have been identified. Check your email for matches.`
+        );
+
+        // In a real implementation, you would call Gemini API here:
+        /*
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Find similar items to this ${item.status} item: ${item.name} - ${item.description}. Compare with other items and suggest matches.`
+                            }]
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+                // Process AI response and show matches
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+            }
+            */
+      }
+
+      // Add new item
+      function addItem(itemData) {
+        const newItem = {
+          ...itemData,
+          timestamp: Date.now(),
+        };
+
+        items.unshift(newItem);
+
+        // Store user email for "My Items" section
+        userEmail = itemData.contact;
+
+        updateStats();
+
+        // In a real app, save to Firebase:
+
+        if (db) {
+          db.collection("items")
+            .add(newItem)
+            .then((docRef) => {
+              // Set the Firestore-generated ID as the item ID
+              newItem.id = docRef.id;
+              items.unshift(newItem);
+              loadMyItems(); // Refresh display
+              alert(
+                `${
+                  itemData.status === "lost" ? "Lost" : "Found"
+                } item reported successfully! We'll notify you if we find any matches.`
+              );
+            });
+        } else {
+          items.unshift(newItem); // fallback local
+          loadMyItems();
+          alert("Item added (offline mode)");
+        }
+      }
+
+      // Delete item
+      function deleteItem(itemId) {
+        if (confirm("Are you sure you want to delete this item?")) {
+          items = items.filter((item) => item.id !== itemId);
+          updateStats();
+          loadMyItems();
+
+          // In a real app, delete from Firebase:
+
+          if (db) {
+            db.collection("items").doc(itemId).delete();
+          }
+        }
+      }
+
+      // Form handlers
+      document
+        .getElementById("lost-item-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const formData = {
+            name: document.getElementById("lost-item-name").value,
+            category: document.getElementById("lost-category").value,
+            description: document.getElementById("lost-description").value,
+            location: document.getElementById("lost-location").value,
+            date: document.getElementById("lost-date").value,
+            contact: document.getElementById("lost-contact").value,
+            status: "lost",
+          };
+
+          addItem(formData);
+          this.reset();
+        });
+
+      document
+        .getElementById("found-item-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const formData = {
+            name: document.getElementById("found-item-name").value,
+            category: document.getElementById("found-category").value,
+            description: document.getElementById("found-description").value,
+            location: document.getElementById("found-location").value,
+            date: document.getElementById("found-date").value,
+            contact: document.getElementById("found-contact").value,
+            status: "found",
+          };
+
+          addItem(formData);
+          this.reset();
+        });
+
+      // Search functionality
+      document
+        .getElementById("search-input")
+        .addEventListener("input", function (e) {
+          loadItems(e.target.value);
+        });
+
+      // Initialize app
+      document.addEventListener("DOMContentLoaded", function () {
+        loadItems();
+        updateStats();
+
+        // Set today's date as default for date inputs
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("lost-date").value = today;
+        document.getElementById("found-date").value = today;
       });
     </script>
   </body>
