@@ -88,8 +88,4 @@ Gemini API is used to analyze item descriptions and titles to:
 - 🗂️ Categorization & filtering improvements  
 - 🗣️ Language support for regional users  
 
----
 
-## 🙌 Contributions
-
-Have suggestions or feature ideas? Feel f
